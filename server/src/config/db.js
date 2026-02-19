@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import dns from 'dns';
+import { logger } from '../utils/logger.js';
 
 // Use Google DNS (fixes DNS resolution on some networks)
 dns.setServers(['8.8.8.8', '8.8.4.4']);
@@ -14,9 +15,9 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 10000,
       connectTimeoutMS: 10000,
     });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    logger.info('MongoDB Connected', { host: conn.connection.host });
   } catch (error) {
-    console.error(`MongoDB connection error: ${error.message}`);
+    logger.error('MongoDB connection error', error);
     if (error.message.includes('whitelist') || error.message.includes('IP')) {
       console.error('\n>>> FIX: Add your IP in MongoDB Atlas:');
       console.error('    1. Go to https://cloud.mongodb.com → Network Access');
